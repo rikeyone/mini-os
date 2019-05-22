@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#THIS MAYBE KBUILD_OUTPUT
+ROOTDIR=$1
+TARGET=$2
+
+CONFIG=${ROOTDIR}/.config
+NUM=`cat $CONFIG | grep CONFIG | grep -v '\#' | wc -l`
+echo $NUM
+
+cat $CONFIG | grep CONFIG | grep -v '\#' > ${TARGET}
+sed -i 's/\"/\\\"/g' ${TARGET}
+sed -i 's/^/\t\"&/g' ${TARGET}
+sed -i 's/$/&\",/g' ${TARGET}
+sed -i '1i\static char *config[] = {'  ${TARGET}
+sed -i '$a\};' ${TARGET}
