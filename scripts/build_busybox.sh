@@ -26,8 +26,8 @@ if [ ! -e ${SRC} ];then
 	git clone -b ${BUSYBOX} https://github.com/rikeyone/busybox.git --depth=1
 fi
 
-cp ${ROOTDIR}/lib/busybox/minios-config/${BUSYBOX}/minios_arm64_defconfig ${ROOTDIR}/lib/busybox/${BUSYBOX}/configs/
-cp ${ROOTDIR}/lib/busybox/minios-config/${BUSYBOX}/minios_arm32_defconfig ${ROOTDIR}/lib/busybox/${BUSYBOX}/configs/
+cp ${ROOTDIR}/lib/minios-config/${BUSYBOX}/minios_arm64_defconfig ${ROOTDIR}/lib/busybox/${BUSYBOX}/configs/
+cp ${ROOTDIR}/lib/minios-config/${BUSYBOX}/minios_arm32_defconfig ${ROOTDIR}/lib/busybox/${BUSYBOX}/configs/
 
 build_arm64() {
 	echo "start to build ARM64 $1 busybox!!"
