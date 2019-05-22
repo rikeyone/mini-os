@@ -12,7 +12,8 @@ qemu-system-aarch64 -version
 if [ $? != 0 ]; then
 	echo "qemu-system-aarch64 don't exsit! compile it!"
 	sudo apt-get build-dep qemu
-	tar -jxf tar/qemu-2.11.0.tar.bz2
+	wget https://download.qemu.org/qemu-2.11.0.tar.bz2
+	tar -jxf qemu-2.11.0.tar.bz2
 	cd qemu-2.11.0
 	./configure --target-list=aarch64-softmmu
 	make
