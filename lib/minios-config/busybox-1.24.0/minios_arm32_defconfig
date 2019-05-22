@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Busybox version: 1.24.0
-# Mon May 20 19:54:11 2019
+# Wed Jan 31 10:42:40 2018
 #
 CONFIG_HAVE_DOT_CONFIG=y
 
@@ -57,7 +57,7 @@ CONFIG_FEATURE_HAVE_RPC=y
 #
 # Build Options
 #
-# CONFIG_STATIC is not set
+CONFIG_STATIC=y
 # CONFIG_PIE is not set
 # CONFIG_NOMMU is not set
 # CONFIG_BUILD_LIBBUSYBOX is not set
@@ -91,7 +91,7 @@ CONFIG_INSTALL_APPLET_SYMLINKS=y
 # CONFIG_INSTALL_SH_APPLET_SYMLINK is not set
 # CONFIG_INSTALL_SH_APPLET_HARDLINK is not set
 # CONFIG_INSTALL_SH_APPLET_SCRIPT_WRAPPER is not set
-CONFIG_PREFIX="./_install"
+CONFIG_PREFIX="../../../rootfs/arm/_install"
 
 #
 # Busybox Library Tuning
