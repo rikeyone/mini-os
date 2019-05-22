@@ -16,7 +16,7 @@ fi
 echo root path is ${ROOTDIR}
 
 if [ x${BUSYBOX} = x ];then
-	BUSYBOX=busybox-1.24.0
+	BUSYBOX=busybox-1.30.0
 fi
 
 SRC=${ROOTDIR}/lib/busybox/${BUSYBOX}
