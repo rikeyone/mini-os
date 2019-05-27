@@ -1,7 +1,7 @@
 #!/bin/bash
 
 sudo apt-get install qemu libncurses5-dev build-essential
-sudo apt-get install gcc-arm-linux-gnueabi
+#sudo apt-get install gcc-arm-linux-gnueabi
 #sudo apt-get install gcc-aarch64-linux-gnu
 sudo apt-get install figlet
 sudo apt-get install bison flex
@@ -22,6 +22,18 @@ if [ $? != 0 ]; then
 else
 	echo "qemu-system-aarch64 already exsit!"
 fi
+
+# install and use arm-linux-gnueabi version 4.9
+if [ ! -e /opt/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabi/ ]; then
+	echo "install  arm-linux-gnueabi version 4.9 to /opt!"
+	if [ ! -e gcc-toolchain/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabi.tar.xz ]; then
+		git clone -b arm-linux-gnueabi https://github.com/rikeyone/gcc-toolchain.git
+	fi
+	sudo tar -xvf gcc-toolchain/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabi.tar.xz -C /opt/
+else
+	echo "arm-linux-gnueabi-gcc version 4.9 already installed to /opt!"
+fi
+
 
 # install and use aarch64-linux-gnu-gcc version 4.9
 if [ ! -e /opt/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu/ ]; then
