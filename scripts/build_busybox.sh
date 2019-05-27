@@ -21,9 +21,14 @@ fi
 
 SRC=${ROOTDIR}/lib/busybox/${BUSYBOX}
 
-if [ ! -e ${SRC} ];then
+if [ ! -e ${ROOTDIR}/lib/busybox ];then
 	cd ${ROOTDIR}/lib
 	git clone -b ${BUSYBOX} https://github.com/rikeyone/busybox.git --depth=1
+elif [ ! -e ${SRC} ];then
+	cd ${ROOTDIR}/lib/busybox
+	git clean -f -d
+	git fetch origin ${BUSYBOX}:${BUSYBOX}
+	git checkout ${BUSYBOX}
 fi
 
 cp ${ROOTDIR}/lib/minios-config/${BUSYBOX}/minios_arm64_defconfig ${ROOTDIR}/lib/busybox/${BUSYBOX}/configs/
@@ -71,5 +76,3 @@ case ${PLATFORM} in
 		exit 1
 		;;
 esac
-
-
