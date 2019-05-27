@@ -15,7 +15,7 @@ fi
 
 ## Find the linux kernel version and download
 if [ x"${LINUX_KERNEL}" = x ];then
-	LINUX_KERNEL=linux-4.0
+	LINUX_KERNEL=linux-4.9
 fi
 
 echo root path is ${ROOTDIR}
@@ -24,9 +24,13 @@ echo linux version is ${LINUX_KERNEL}
 SRC=${ROOTDIR}/kernel/linux-kernel/${LINUX_KERNEL}
 OBJ=${ROOTDIR}/kernel_obj
 
-if [ ! -e ${SRC} ];then
+if [ ! -e ${ROOTDIR}/kernel/linux-kernel ];then
 	cd ${ROOTDIR}/kernel
 	git clone -b ${LINUX_KERNEL} https://github.com/rikeyone/linux-kernel.git --depth=1
+elif [ ! -e ${SRC} ];then
+	cd ${ROOTDIR}/kernel/linux-kernel
+	git fetch origin ${LINUX_KERNEL}:${LINUX_KERNEL}
+	git checkout ${LINUX_KERNEL}
 fi
 
 build_arm64() {
@@ -119,4 +123,7 @@ case ${PLATFORM} in
 		;;
 esac
 
+
+rm ${ROOTDIR}/kernel/linux-kernel/${LINUX_KERNEL}/arch/arm/configs/minios_defconfig -f
+rm ${ROOTDIR}/kernel/linux-kernel/${LINUX_KERNEL}/arch/arm64/configs/minios_defconfig -f
 
