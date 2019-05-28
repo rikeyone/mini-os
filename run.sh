@@ -8,9 +8,10 @@
 function usage()
 {
 	echo "MiniOS Run Script V1.0"
-	echo "Usage: ./run.sh [-t type][-d][-h][-s]"
+	echo "Usage: ./run.sh [-t type][-d][-h][-s][-p plat]"
 	echo "OPTIONS:"
-	echo -e "\t-t type    choose a start rootfs type [nfs/initramfs]"
+	echo -e "\t-t type      choose a start rootfs type [nfs/initramfs]"
+	echo -e "\t-p platform  choose a platform type [arm/arm64]"
 	echo -e "\t-d         start using gdb option"
 	echo -e "\t-s         shutdown ARM64 qemu process"
 	echo -e "\t-h         show this tips"
@@ -27,11 +28,8 @@ fi
 
 echo ${USER}
 
-if [ $# -lt 1 ];then
-	START=scripts/qemu_start.sh
-fi
 
-while getopts "t:dsh" opt;
+while getopts "p:t:dsh" opt;
 do
     case $opt in
     t)
@@ -47,6 +45,9 @@ do
     s)
 		START=scripts/qemu_stop.sh
 		;;
+    p)
+		PLATFORM=${OPTARG}
+		;;
     h)
 		usage
 		exit;;
@@ -56,4 +57,12 @@ do
     esac
 done
 
-./${START} arm64
+if [ x${START} = x ];then
+	START=scripts/qemu_start.sh
+fi
+
+if [ x${PLATFORM} = x ];then
+	PLATFORM=arm64
+fi
+
+./${START} ${PLATFORM}
