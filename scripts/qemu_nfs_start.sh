@@ -29,6 +29,7 @@ NET_NUMBER=192.168.1.0
 NET_MASK=255.255.255.0
 NFS_ROOT=${ROOTDIR}/rootfs
 
+sudo apt-get install net-tools
 sudo apt-get install nfs-kernel-server
 sudo apt-get install uml-utilities
 
