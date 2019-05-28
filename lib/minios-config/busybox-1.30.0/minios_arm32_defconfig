@@ -65,7 +65,7 @@ CONFIG_INSTALL_APPLET_SYMLINKS=y
 # CONFIG_INSTALL_SH_APPLET_SYMLINK is not set
 # CONFIG_INSTALL_SH_APPLET_HARDLINK is not set
 # CONFIG_INSTALL_SH_APPLET_SCRIPT_WRAPPER is not set
-CONFIG_PREFIX="../../../rootfs/arm64/_install"
+CONFIG_PREFIX="../../../rootfs/arm/_install"
 
 #
 # Debugging Options
