@@ -29,6 +29,7 @@ if [ ! -e ${ROOTDIR}/kernel/linux-kernel ];then
 	git clone -b ${LINUX_KERNEL} https://github.com/rikeyone/linux-kernel.git --depth=1
 elif [ ! -e ${SRC} ];then
 	cd ${ROOTDIR}/kernel/linux-kernel
+	git clean -f -d
 	git fetch origin ${LINUX_KERNEL}:${LINUX_KERNEL}
 	git checkout ${LINUX_KERNEL}
 fi
@@ -122,8 +123,4 @@ case ${PLATFORM} in
 		echo "   ./build.sh select    #select platform and config to build"
 		;;
 esac
-
-
-rm ${ROOTDIR}/kernel/linux-kernel/${LINUX_KERNEL}/arch/arm/configs/minios_defconfig -f
-rm ${ROOTDIR}/kernel/linux-kernel/${LINUX_KERNEL}/arch/arm64/configs/minios_defconfig -f
 
