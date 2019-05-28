@@ -1,8 +1,8 @@
 # Description
 
-MiniOS is an develop environment for linux kernel and applications using QEMU virtual machine. Developers can easily clone from it and develop based on it. One can make his idea fast to an product using MiniOS environment. It is a good choice to verify your solutions on MiniOS before production.
+MiniOS is a develop environment for linux kernel and applications using QEMU virtual machine. Developers can easily clone it and develop based on it. You can make your idea to an product very quickly using MiniOS environment. It is a good choice to verify your solutions on MiniOS before production.
 
-# Install
+# Install Environment
 
 ```
 sudo ./install.sh
@@ -11,16 +11,34 @@ It will install compile toolchains of arm and arm64, and qemu environment.
 
 # Build MiniOS
 
-To build the full MiniOS system:
+To build MiniOS system:
 
 ```
-sudo ./build.sh -a
+./build.sh [-a][-m module][-p platform]
+```
+Options:
+
+```
+ -a: build all modules.
+ -m: build expect module:kernel/rootfs/busybox/libc/initramfs.
+ -p: build platform, support arm and arm64, default is arm64.
+ -h: help informations.
 ```
 
-To build MiniOS modules:
+# Build Samples
+
+ - Default platform arm64:
+
+To build full MiniOS system [platform: arm64]:
 
 ```
-sudo ./build.sh -m {MODDULE}
+./build.sh -a
+```
+
+To build MiniOS modules [platform:arm64]:
+
+```
+./build.sh -m {MODDULE}
 ```
 
 the module has these values to choose: kernel, rootfs, busybox, libc, initramfs.
@@ -29,18 +47,65 @@ BTW, the rootfs module will include "libc", "initramfs" and "busybox" build.
 eg:
 
 ```
-sudo ./build.sh rootfs    #compile arm64 platform rootfs module
-sudo ./build.sh kernel    #compile arm64 platform kernel module
+./build.sh -m rootfs    #compile arm64 platform rootfs module
+./build.sh -m kernel    #compile arm64 platform kernel module
+```
+ - arm platform
+
+To build full MiniOS system [platform: arm]:
+
+```
+./build.sh -a -p arm
 ```
 
-# Run qemu
+To build MiniOS modules [platform:arm]:
+
+```
+./build.sh -m {MODDULE} -p arm
+```
+
+the module has these values to choose: kernel, rootfs, busybox, libc, initramfs.
+BTW, the rootfs module will include "libc", "initramfs" and "busybox" build.
+
+eg:
+
+```
+./build.sh -m rootfs -p arm  #compile arm64 platform rootfs module
+./build.sh -m kernel -p arm  #compile arm64 platform kernel module
+```
+
+# Run MiniOS
 
 ```
 sudo ./run.sh
 ```
+This command will run default arm64 minios system. If you build an arm platform minios,
+you should add option to tell run.sh script:
 
-# Stop qemu
+```
+sudo ./run.sh -p arm
+```
+
+# Stop MiniOS
 
 ```
 sudo ./run.sh -s
+```
+This command will stop default arm64 minios system. If you want to stop an arm platform minios,
+you should add option to tell run.sh script:
+
+```
+sudo ./run.sh -s -p arm
+```
+# Advance Info
+
+MiniOS kernel support list: linux-4.0/linux-4.9
+MiniOS busybox support list: busybox-1.24.0/busybox-1.30.0
+
+Default verion is the newest version of each module, if you can use other versions to build,
+just export env variables to change kernel and busybox version to build, such as:
+
+```
+export BUSYBOX=busybox-1.30.0
+export LINUX_KERNEL=linux-4.9
 ```
