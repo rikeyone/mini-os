@@ -12,7 +12,7 @@ function usage()
 	echo "OPTIONS:"
 	echo -e "\t-a         build all necessary modules"
 	echo -e "\t-m module  just build one target module"
-	echo -e "\t-t arm64   select platform, options: arm, arm64[default]"
+	echo -e "\t-p arm64   select platform, options: arm, arm64[default]"
 	echo -e "\t-h         show this tips"
 	echo "Example:"
 	echo "	./build.sh -a"
