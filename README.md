@@ -97,6 +97,15 @@ you should add option to tell run.sh script:
 ```
 sudo ./run.sh -s -p arm
 ```
+There is another important feature of minios, it support NFS as rootfs to boot linux kernel.
+Using this feature, we can easily debug our applications without rebuilding the whole system:
+```
+sudo ./run.sh -t nfs -p arm
+```
+or
+```
+sudo ./run.sh -t nfs
+```
 # Advance Info
 
 MiniOS kernel support list: linux-4.0/linux-4.9
