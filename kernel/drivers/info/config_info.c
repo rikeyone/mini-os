@@ -4,7 +4,9 @@
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
 #include <asm/uaccess.h>
+#include <linux/module.h>
 #include "config_info.h"
+
 
 static int config_info_proc_show(struct seq_file *m, void *v)
 {
