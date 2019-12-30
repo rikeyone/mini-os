@@ -52,7 +52,7 @@ fi
 if [ "${arch}" = "arm" ];then
 	qemu-system-arm -M vexpress-a9 \
 		-smp 4 \
-		-m 1024m \
+		-m 1024M \
 		-kernel ${OBJ}/arch/arm/boot/zImage \
 		-append "console=ttyAMA0 loglevel=8 root=/dev/nfs rw nfsroot=${HOST_IP}:${NFS_ROOT}/arm/_install,nolock ip=${TARGET_IP}" \
 		-dtb ${OBJ}/arch/arm/boot/dts/vexpress-v2p-ca9.dtb \
