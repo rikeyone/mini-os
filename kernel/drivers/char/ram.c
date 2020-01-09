@@ -36,7 +36,7 @@ struct ramdev {
 	dev_t dev;
 	struct cdev cdev;
 	struct class *class;
-	spinlock_t slock;
+	struct mutex slock;
 	struct semaphore sem;
 	wait_queue_head_t r_wait;
 	void *buffer;
@@ -78,7 +78,7 @@ static int ring_buffer_read(struct ramdev *dev, char __user *buf, int size)
 {
 	int count, ret, len;
 
-	spin_lock(&dev->slock);
+	mutex_lock(&dev->slock);
 	count = (dev->end - dev->start + CDEV_RAM_SIZE) % CDEV_RAM_SIZE;
 	if (count < size)
 		size = count;
@@ -104,7 +104,7 @@ static int ring_buffer_read(struct ramdev *dev, char __user *buf, int size)
 	ramdev_info("Read ringbuffer: start:%d end:%d count:%d size:%d\n",
 		dev->start, dev->end, (dev->end - dev->start + CDEV_RAM_SIZE) % CDEV_RAM_SIZE, size);
 out:
-	spin_unlock(&dev->slock);
+	mutex_unlock(&dev->slock);
 	return ret;
 }
 
@@ -146,7 +146,7 @@ static int ring_buffer_write(struct ramdev *dev, const char __user *buf, int siz
 {
 	int ret;
 
-	spin_lock(&dev->slock);
+	mutex_lock(&dev->slock);
 	while (ring_buffer_overflow(size)) {
 		ret = __ring_buffer_write(dev, buf, CDEV_RAM_SIZE) ;
 		if (ret < 0) {
@@ -165,7 +165,7 @@ static int ring_buffer_write(struct ramdev *dev, const char __user *buf, int siz
 	wake_up_interruptible(&dev->r_wait);
 	ramdev_info("wake up wait queue\n");
 out:
-	spin_unlock(&dev->slock);
+	mutex_unlock(&dev->slock);
 	return ret;
 }
 
@@ -270,9 +270,11 @@ static int __init ramdev_init(void)
 	}
 
 	/* ramdev struct initialize */
-	spin_lock_init(&ramdev->slock);
+	mutex_init(&ramdev->slock);
 	init_waitqueue_head(&ramdev->r_wait);
 	sema_init(&ramdev->sem, 1);
+	ramdev->start = 0;
+	ramdev->end = 0;
 
 	/* dev number alloc */
 	rc = alloc_chrdev_region(&ramdev->dev, 0, 1, CHAR_DEVICE_NAME);
