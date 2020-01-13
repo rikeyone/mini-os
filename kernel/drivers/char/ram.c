@@ -16,7 +16,9 @@
 #include <linux/device.h>
 #include <linux/semaphore.h>
 
-#define CDEV_RAM_SIZE (32)
+#define CDEV_RAM_SIZE (16)
+#define RINGBUF_FULL_SIZE (CDEV_RAM_SIZE - 1)
+
 #define CHAR_DEVICE_NAME "ramchar"
 
 static int debug_value = 1;
@@ -71,7 +73,7 @@ static int ring_buffer_count(struct ramdev *dev)
 
 static int ring_buffer_overflow(int size)
 {
-	return (size > CDEV_RAM_SIZE) ? 1 : 0;
+	return (size >= RINGBUF_FULL_SIZE) ? 1 : 0;
 }
 
 static int ring_buffer_read(struct ramdev *dev, char __user *buf, int size)
@@ -110,8 +112,9 @@ out:
 
 static int __ring_buffer_write(struct ramdev *dev, const char __user *buf, int size)
 {
-	int count, unused, len, ret;
+	int count, unused, len, ret = 0;
 
+	/* write data to ringbuffer */
 	if (dev->end + size <= CDEV_RAM_SIZE) {
 		if(copy_from_user(dev->buffer + dev->end, buf, size)){
 			ret = -EFAULT;
@@ -128,12 +131,13 @@ static int __ring_buffer_write(struct ramdev *dev, const char __user *buf, int s
 			goto out;
 		}
 	}
-	/* move buffer start head to write new data */
+	/* move ringbuf start point to write new data */
 	count = (dev->end - dev->start + CDEV_RAM_SIZE) % CDEV_RAM_SIZE;
-	unused = CDEV_RAM_SIZE - count;
+	unused = RINGBUF_FULL_SIZE - count;
 	if (size > unused) {
 		dev->start = (dev->start + size - unused) % CDEV_RAM_SIZE;
 	}
+	/* update ringbuf end point */
 	dev->end = (dev->end + size) % CDEV_RAM_SIZE;
 	ret = size;
 	ramdev_info("Write ringbuffer: start:%d end:%d count:%d size:%d\n",
@@ -144,23 +148,27 @@ out:
 
 static int ring_buffer_write(struct ramdev *dev, const char __user *buf, int size)
 {
-	int ret;
+	int ret, left;
 
+	left = size;
 	mutex_lock(&dev->slock);
-	while (ring_buffer_overflow(size)) {
-		ret = __ring_buffer_write(dev, buf, CDEV_RAM_SIZE) ;
+	while (ring_buffer_overflow(left)) {
+		ret = __ring_buffer_write(dev, buf, RINGBUF_FULL_SIZE) ;
 		if (ret < 0) {
 			ramdev_err("ring buffer write error\n");
 			goto out;
 		}
-		buf += CDEV_RAM_SIZE;
-		size -= CDEV_RAM_SIZE;
+		buf += RINGBUF_FULL_SIZE;
+		left -= RINGBUF_FULL_SIZE;
 	}
-	ret = __ring_buffer_write(dev, buf, size % CDEV_RAM_SIZE);
-	if (ret < 0) {
-		ramdev_err("ring buffer write error\n");
-		goto out;
+	if (left) {
+		ret = __ring_buffer_write(dev, buf, left);
+		if (ret < 0) {
+			ramdev_err("ring buffer write error\n");
+			goto out;
+		}
 	}
+
 	ret = size;
 	wake_up_interruptible(&dev->r_wait);
 	ramdev_info("wake up wait queue\n");
