@@ -16,6 +16,10 @@
 #include <linux/device.h>
 #include <linux/semaphore.h>
 
+
+#define USE_DEV_ATTR_GROUP
+
+
 #define CDEV_RAM_SIZE (16)
 #define RINGBUF_FULL_SIZE (CDEV_RAM_SIZE - 1)
 
@@ -35,6 +39,7 @@ static int debug_value = 1;
 		pr_info("info:"fmt, ##__VA_ARGS__)
 
 struct ramdev {
+	struct device *device;
 	dev_t dev;
 	struct cdev cdev;
 	struct class *class;
@@ -261,6 +266,44 @@ static const struct file_operations cdev_fops = {
 	.release	= dev_release,
 };
 
+static ssize_t show_debug(struct device *dev,
+							struct device_attribute *attr, char *buf)
+{
+
+	return sprintf(buf, "debug value:%d\n", debug_value);
+}
+
+static ssize_t store_debug(struct device *dev,
+							struct device_attribute *attr,
+							const char *buf, size_t size)
+{
+	sscanf(buf, "%d", &debug_value);
+	return size;
+}
+
+
+static ssize_t show_buffer_count(struct device *dev,
+							struct device_attribute *attr, char *buf)
+{
+	struct ramdev *ramdev = container_of(&dev, struct ramdev, device);
+	return sprintf(buf, "%d\n", (ramdev->end + CDEV_RAM_SIZE - ramdev->start) % CDEV_RAM_SIZE);
+}
+
+static DEVICE_ATTR(debug, 0660, show_debug, store_debug);
+static DEVICE_ATTR(count, 0440, show_buffer_count, NULL);
+
+#ifdef USE_DEV_ATTR_GROUP
+static struct attribute *ramchar_attributes[] = {
+    &dev_attr_debug.attr,
+	&dev_attr_count.attr,
+    NULL
+};
+
+static const struct attribute_group ramchar_attr_group = {
+    .attrs = ramchar_attributes,
+};
+#endif
+
 static int __init ramdev_init(void)
 {
 	struct ramdev *ramdev;
@@ -301,8 +344,30 @@ static int __init ramdev_init(void)
 	}
 	/* create device in sysfs */
 	ramdev->class = class_create(THIS_MODULE, CHAR_DEVICE_NAME);
-	device_create(ramdev->class, NULL, ramdev->dev, NULL, CHAR_DEVICE_NAME);
-
+	ramdev->device = device_create(ramdev->class, NULL, ramdev->dev, NULL, CHAR_DEVICE_NAME);
+	if (ramdev->device == NULL) {
+		ramdev_err("");
+		goto cdev_fail;
+	}
+	#ifdef USE_DEV_ATTR_GROUP
+	/* create sysfs and meizu class link files */
+	rc = sysfs_create_group(&ramdev->device->kobj, &ramchar_attr_group);
+	if (rc < 0) {
+		ramdev_err("Failed to create attribute sysfs\n");
+		goto cdev_fail;
+	}
+	#else
+	rc = device_create_file(ramdev->device, &dev_attr_debug);
+	if (rc < 0) {
+		ramdev_err("Failed to create attribute sysfs\n");
+		goto cdev_fail;
+	}
+	rc = device_create_file(ramdev->device, &dev_attr_count);
+	if (rc < 0) {
+		ramdev_err("Failed to create attribute sysfs\n");
+		goto cdev_fail;
+	}
+	#endif
 	g_dev = ramdev;
 	return 0;
 
@@ -319,6 +384,10 @@ alloc_fail1:
 void ramdev_exit(void)
 {
 	if (g_dev) {
+		#ifndef USE_DEV_ATTR_GROUP
+		device_remove_file(g_dev->device, &dev_attr_debug);
+		device_remove_file(g_dev->device, &dev_attr_count);
+		#endif
 		device_destroy(g_dev->class, g_dev->dev);
 		class_destroy(g_dev->class);
 		cdev_del(&g_dev->cdev);

@@ -37,10 +37,10 @@ S_IXOTH 00001 权限, 代表其他用户具有可执行的权限.
 */
 int main(int argc, char *argv[])
 {
-    char buf[16] = {0};
+    char buf[32] = {0};
     int fd, ret;
 
-    fgets(buf, 16, stdin);
+    fgets(buf, 32, stdin);
     fd = open("/dev/ramchar", O_RDWR);
     if (fd < 0) {
         printf("Open file error, %s\n", strerror(errno));
