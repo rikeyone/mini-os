@@ -26,7 +26,7 @@ OBJ=${ROOTDIR}/kernel_obj
 
 if [ ! -e ${ROOTDIR}/kernel/linux-kernel ];then
 	cd ${ROOTDIR}/kernel
-	git clone -b ${LINUX_KERNEL} https://github.com/rikeyone/linux-kernel.git --depth=1
+	git clone -b ${LINUX_KERNEL} https://gitee.com/rikeyone/linux-kernel.git --depth=1
 elif [ ! -e ${SRC} ];then
 	cd ${ROOTDIR}/kernel/linux-kernel
 	git clean -f -d

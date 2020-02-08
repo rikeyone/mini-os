@@ -23,7 +23,7 @@ SRC=${ROOTDIR}/lib/busybox/${BUSYBOX}
 
 if [ ! -e ${ROOTDIR}/lib/busybox ];then
 	cd ${ROOTDIR}/lib
-	git clone -b ${BUSYBOX} https://github.com/rikeyone/busybox.git --depth=1
+	git clone -b ${BUSYBOX} https://gitee.com/rikeyone/busybox.git --depth=1
 elif [ ! -e ${SRC} ];then
 	cd ${ROOTDIR}/lib/busybox
 	git clean -f -d

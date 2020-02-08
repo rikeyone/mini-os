@@ -27,7 +27,7 @@ fi
 if [ ! -e /opt/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabi/ ]; then
 	echo "install  arm-linux-gnueabi version 4.9 to /opt!"
 	if [ ! -e gcc-toolchain/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabi.tar.xz ]; then
-		git clone -b arm-linux-gnueabi https://github.com/rikeyone/gcc-toolchain.git
+		git clone -b arm-linux-gnueabi https://gitee.com/rikeyone/gcc-toolchain.git
 	fi
 	sudo tar -xvf gcc-toolchain/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabi.tar.xz -C /opt/
 else
@@ -39,13 +39,9 @@ fi
 if [ ! -e /opt/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu/ ]; then
 	echo "install aarch64-linux-gnu-gcc version 4.9 to /opt!"
 	if [ ! -e gcc-toolchain/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu.tar.xz ]; then
-		git clone -b aarch64-linux-gnu https://github.com/rikeyone/gcc-toolchain.git
+		git clone -b aarch64-linux-gnu https://gitee.com/rikeyone/gcc-toolchain.git
 	fi
 	sudo tar -xvf gcc-toolchain/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu.tar.xz -C /opt/
-	sudo rm /usr/bin/aarch64-linux-gnu-gcc /usr/bin/aarch64-linux-gnu-ld /usr/bin/aarch64-linux-gnu-ar -f
-	sudo ln -s /opt/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-gcc /usr/bin/aarch64-linux-gnu-gcc
-	sudo ln -s /opt/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-ld /usr/bin/aarch64-linux-gnu-ld
-	sudo ln -s /opt/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-ar /usr/bin/aarch64-linux-gnu-ar
 else
 	echo "aarch64-linux-gnu-gcc version 4.9 already installed to /opt!"
 fi
