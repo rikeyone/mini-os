@@ -108,13 +108,15 @@ sudo ./run.sh -t nfs
 ```
 # Advance Info
 
-MiniOS kernel support list: linux-4.0/linux-4.9
-MiniOS busybox support list: busybox-1.24.0/busybox-1.30.0
+MiniOS kernel support list: linux-4.0/linux-4.9.
 
-Default verion is the newest version of each module, if you can use other versions to build,
-just export env variables to change kernel and busybox version to build, such as:
+MiniOS busybox support list: busybox-1.24.0/busybox-1.30.0.
+
+If you want to build the specific versions of kernel or busybox, just export env variables
+to change kernel and busybox version to build, such as:
 
 ```
 export BUSYBOX=busybox-1.30.0
-export LINUX_KERNEL=linux-4.9
+export LINUX_KERNEL=linux-4.0
 ```
+If no env variable is exported, the script will use default versions to build.

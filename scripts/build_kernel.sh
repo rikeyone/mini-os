@@ -15,7 +15,7 @@ fi
 
 ## Find the linux kernel version and download
 if [ x"${LINUX_KERNEL}" = x ];then
-	LINUX_KERNEL=linux-4.9
+	LINUX_KERNEL=linux-4.0
 fi
 
 echo root path is ${ROOTDIR}
