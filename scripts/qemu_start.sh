@@ -43,6 +43,7 @@ if [ "${arch}" = "arm" ];then
 		-nographic
 else
 	qemu-system-aarch64 -machine virt \
+		-qmp tcp:localhost:4444,server,nowait \
 		-cpu cortex-a57 \
 		-machine type=virt \
 		-nographic -m 2048 \
