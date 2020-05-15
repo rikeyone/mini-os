@@ -61,11 +61,15 @@ elif [ -e ${OBJ}/arch/arm/boot/zImage -a "${PLATFORM}" != "arm" ]; then
 	rm -rf ${OBJ}
 fi
 
-cp ${ROOTDIR}/kernel/minios-config/${LINUX_KERNEL}/minios_arm32_defconfig \
-    ${ROOTDIR}/kernel/linux-kernel/${LINUX_KERNEL}/arch/arm/configs/minios_defconfig
+if [ ! -f ${ROOTDIR}/kernel/linux-kernel/${LINUX_KERNEL}/arch/arm/configs/minios_defconfig ];then
+	cp ${ROOTDIR}/kernel/minios-config/${LINUX_KERNEL}/minios_arm32_defconfig \
+		${ROOTDIR}/kernel/linux-kernel/${LINUX_KERNEL}/arch/arm/configs/minios_defconfig
+fi
 
-cp ${ROOTDIR}/kernel/minios-config/${LINUX_KERNEL}/minios_arm64_defconfig \
-    ${ROOTDIR}/kernel/linux-kernel/${LINUX_KERNEL}/arch/arm64/configs/minios_defconfig
+if [ ! -f ${ROOTDIR}/kernel/linux-kernel/${LINUX_KERNEL}/arch/arm64/configs/minios_defconfig ];then
+	cp ${ROOTDIR}/kernel/minios-config/${LINUX_KERNEL}/minios_arm64_defconfig \
+		${ROOTDIR}/kernel/linux-kernel/${LINUX_KERNEL}/arch/arm64/configs/minios_defconfig
+fi
 
 cd ${SRC}
 case ${PLATFORM} in
