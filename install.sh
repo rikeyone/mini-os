@@ -27,7 +27,14 @@ fi
 if [ ! -e /opt/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabi/ ]; then
 	echo "install  arm-linux-gnueabi version 4.9 to /opt!"
 	if [ ! -e gcc-toolchain/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabi.tar.xz ]; then
-		git clone -b arm-linux-gnueabi https://gitee.com/rikeyone/gcc-toolchain.git
+		if [ ! -e gcc-toolchain ];then
+			git clone -b arm-linux-gnueabi https://gitee.com/rikeyone/gcc-toolchain.git
+		else
+			cd gcc-toolchain
+			git fetch origin arm-linux-gnueabi
+			git checkout origin/arm-linux-gnueabi
+			cd ..
+		fi
 	fi
 	sudo tar -xvf gcc-toolchain/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabi.tar.xz -C /opt/
 else
@@ -39,7 +46,14 @@ fi
 if [ ! -e /opt/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu/ ]; then
 	echo "install aarch64-linux-gnu-gcc version 4.9 to /opt!"
 	if [ ! -e gcc-toolchain/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu.tar.xz ]; then
-		git clone -b aarch64-linux-gnu https://gitee.com/rikeyone/gcc-toolchain.git
+		if [ ! -e gcc-toolchain ];then
+			git clone -b aarch64-linux-gnu https://gitee.com/rikeyone/gcc-toolchain.git
+		else
+			cd gcc-toolchain
+			git fetch origin aarch64-linux-gnu
+			git checkout origin/aarch64-linux-gnu
+			cd ..
+		fi
 	fi
 	sudo tar -xvf gcc-toolchain/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu.tar.xz -C /opt/
 else
